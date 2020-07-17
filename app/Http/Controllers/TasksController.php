@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Task; 
+use App\Task;
+
+
+
 
 class TasksController extends Controller
 {
@@ -50,10 +53,18 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
+       
+       // バリデーション
+          $request->validate([
+            'status' => 'required|max:10',
+              
+        ]);
        // メッセージを作成
         $task = new Task;
+        $task->status = $request->status;
         $task->content = $request->content;
         $task->save();
+        
 
         // トップページへリダイレクトさせる
         return redirect('/');
@@ -103,12 +114,18 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$id)
     {
         
+        //dd($request);
+           $request->validate([
+            'status' => 'required|max:10',
+             
+         ]);
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
         // メッセージを更新
+        $task->status = $request->status;    
         $task->content = $request->content;
         $task->save();
 
