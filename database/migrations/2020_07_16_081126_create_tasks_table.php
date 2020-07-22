@@ -17,8 +17,10 @@ class CreateTasksTable extends Migration
             $table->bigIncrements('id');
             $table->string('content');
             $table->timestamps();
+            
         });
-    }
+     }
+    
 
     /**
      * Reverse the migrations.
@@ -27,6 +29,7 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
+       
         Schema::dropIfExists('tasks');
     }
 }

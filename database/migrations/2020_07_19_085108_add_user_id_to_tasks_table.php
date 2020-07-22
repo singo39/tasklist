@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStatusToTasksTable extends Migration
+class AddUserIdToTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,24 +14,22 @@ class AddStatusToTasksTable extends Migration
     public function up()
     {
         Schema::table('tasks', function (Blueprint $table) {
-             $table->string('status' ,10);
+        $table->unsignedBigInteger('user_id');   
+        $table->foreign('user_id')->references('id')->on('users');
             //
+        
         });
-    }
-
+}
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
+     public function down()
     {
-       
         Schema::table('tasks', function (Blueprint $table) {
-            //
-             $table-> dropIfExists('status');
-            //
+        
+        $table->dropForeign('posts_user_id_foreign');
         });
     }
-
 }
