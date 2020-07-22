@@ -18,17 +18,6 @@ class TasksController extends Controller
      */
     public function index()
     {    
-        
-        //$tasks = Task::all();
-
-        // メッセージ一覧ビューでそれを表示
-        //return view('tasks.index', [
-        //'tasks' => $tasks,
-        //]);
-    
-    
-    
-       
        $data = [];
         if (\Auth::check()) { // 認証済みの場合
             // 認証済みユーザを取得
@@ -45,13 +34,8 @@ class TasksController extends Controller
 
         // Welcomeビューでそれらを表示
         return view('welcome', $data, );
-        
-   
     }
-       
-        //
-
-
+     
     /**
      * Show the form for creating a new resource.
      *
@@ -67,7 +51,7 @@ class TasksController extends Controller
             'task' => $task,
             
         ]);
-         //
+        
     }
 
     /**
@@ -85,20 +69,14 @@ class TasksController extends Controller
               
         ]);
        
-       
-        
-        
         $task = new Task;
         $task->status = $request->status;
         $task->content = $request->content;
         $task->user_id = \Auth::id();
         $task->save();
-       
-        
-       //  return back();
         
         // トップページへリダイレクトさせる
-        return redirect('/');
+          return redirect('/');
         
     }
 
@@ -112,13 +90,15 @@ class TasksController extends Controller
      {
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
-
+  
         // メッセージ詳細ビューでそれを表示
         return view('tasks.show', [
             'task' => $task,
         ]);
-        //
-    }
+         
+     }
+    
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -130,13 +110,11 @@ class TasksController extends Controller
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
 
-        // メッセージ編集ビューでそれを表示
+         // メッセージ編集ビューでそれを表示
         return view('tasks.edit', [
             'task' => $task,
         ]);
-        //
-    }
-
+   }
 
 
     /**
@@ -161,8 +139,8 @@ class TasksController extends Controller
         $task->content = $request->content;
         $task->save();
         
-        // トップページへリダイレクトさせる
-        return redirect('/');
+         // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+         return redirect('/');
         //
     }
 
