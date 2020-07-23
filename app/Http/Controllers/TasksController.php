@@ -44,16 +44,14 @@ class TasksController extends Controller
     public function create()
     {
          
-        $task = new Task;
-
-        // メッセージ作成ビューを表示
+       $task = new Task;
+       
         return view('tasks.create', [
             'task' => $task,
-            
-        ]);
+    ]);
         
-    }
-
+       
+}
     /**
      * Store a newly created resource in storage.
      *
@@ -64,8 +62,9 @@ class TasksController extends Controller
     {
        
        // バリデーション
-          $request->validate([
+            $request->validate([
             'status' => 'required|max:10',
+            'content' => 'required|max:255',
               
         ]);
        
@@ -74,7 +73,8 @@ class TasksController extends Controller
         $task->content = $request->content;
         $task->user_id = \Auth::id();
         $task->save();
-        
+         
+         
         // トップページへリダイレクトさせる
           return redirect('/');
         
@@ -86,18 +86,18 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+   public function show($id)
      {
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
-  
-        // メッセージ詳細ビューでそれを表示
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
-         
+        if (\Auth::id() === $task->user_id) {
+             return view('tasks.show', [
+              'task' => $task,
+             ]);
+        }else {
+          return redirect('/');
+        }
      }
-    
     
     /**
      * Show the form for editing the specified resource.
@@ -109,11 +109,13 @@ class TasksController extends Controller
    {
         // idの値でメッセージを検索して取得
         $task = Task::findOrFail($id);
-
-         // メッセージ編集ビューでそれを表示
-        return view('tasks.edit', [
+        if (\Auth::id() === $task->user_id) {
+            return view('tasks.edit', [
             'task' => $task,
-        ]);
+            ]);
+        }else {
+          return redirect('/'); 
+        }
    }
 
 
@@ -130,6 +132,7 @@ class TasksController extends Controller
         //dd($request);
            $request->validate([
             'status' => 'required|max:10',
+            'content' => 'required|max:255',
              
          ]);
         // idの値でメッセージを検索して取得
@@ -139,7 +142,12 @@ class TasksController extends Controller
         $task->content = $request->content;
         $task->save();
         
-         // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+        if (\Auth::id() === $task->user_id) {
+            $task->update();
+        }
+        
+        
+         
          return redirect('/');
         //
     }
